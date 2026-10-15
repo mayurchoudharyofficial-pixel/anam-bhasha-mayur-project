@@ -161,6 +161,20 @@ Saving a new item triggers the getaway pose and “Idea stolen. Source credited.
 
 Focus is a blue outline (3px) offset from the control (3px). Buttons transition background and transform over .15s; reduced-motion mode removes transitions. The mascot lifts over 220ms, the menu fades over 120ms, pixel marks pulse over 1600ms, and the getaway settles over 500ms. Reduced-motion mode also removes these animations and transitions, including the analysis spinner.
 
+## Motion
+
+One motion vocabulary across the extension. Exits are quicker than entrances, nothing grows from `scale(0)`, and only transforms and opacity move (plus a bounded blur on arrivals).
+
+- **Arrivals:** `cubic-bezier(.23, 1, .32, 1)`. Step bodies rise 8px out of a 6px blur over 560ms, list-like children 45ms apart (capped at six).
+- **Exits:** `cubic-bezier(.55, 0, 1, .45)`, 160ms, a 12px shift in the direction of travel.
+- **Movement on screen** (the demo cursor): `cubic-bezier(.77, 0, .175, 1)`.
+- **Spring:** one damped `linear()` curve with about 8% overshoot, used only for the detective.
+- **Press:** controls scale to .97 (choice tiles .985) over 160ms.
+- **Feedback:** a failed key test shakes the field once (380ms); a passed one draws its tick.
+- **Reduced motion:** travel, blur and loops are removed; opacity and colour changes stay so state is still visible.
+
+Onboarding's focal moment is the product demonstrating itself: a cursor picks a button, the outline glides between elements on transforms alone, the scan beam passes, and the lesson arrives with values measured from the rendered demo. Onboarding poses are cut from the supplied sheet by `apps/extension/scripts/cut-poses.py`; only the paper around each figure is made transparent.
+
 ## Do's and Don'ts
 
 - **Do** use warm paper and ink as the dominant reading environment.
