@@ -45,3 +45,72 @@
 .coach{position:fixed;right:20px;bottom:112px;width:min(320px,calc(100vw - 32px));background:#252523;color:#fffefa;border-radius:14px;padding:14px 16px;box-shadow:0 14px 40px #24242040;pointer-events:auto;font-size:13px}.coach ol{margin:8px 0 12px;padding-left:18px;display:grid;gap:6px}.coach kbd{font:600 10px/1 ui-monospace,monospace;padding:2px 4px;border-radius:4px;background:#ffffff26}.coach .row{display:flex;gap:6px}.coach button{color:#fffefa;border:1px solid #ffffff33}.coach button.primary{color:#252523;border-color:#f9d54a}
 .a11y-sum{display:flex;justify-content:space-between;gap:8px;width:100%;text-align:left;font-size:12px;padding:8px 12px;border-radius:10px;margin-bottom:10px}.a11y-sum.bad{background:#fde8e4;color:#9b2c1f}.a11y-sum.ok{background:#e0f2e9;color:#216659}.a11y-sum span{white-space:nowrap;font-weight:600}
 .foot kbd{font:600 10px/1 ui-monospace,monospace;padding:2px 4px;border-radius:4px;background:#0000000f;margin-left:4px}.foot .emphasis{border:1px solid #252523;font-weight:600}
+
+/* ---- Polish layer (matches the onboarding) ---------------------------------------------------
+   Same motion vocabulary as DESIGN.md › Motion: ease-out arrivals, quicker exits, presses at .97,
+   nothing grows from scale(0). Kept as one block so the base rules above stay readable. */
+:host{--ink:#252523;--muted:#62625d;--line:#deded5;--paper:#f8f7f2;--surface:#fffefa;--hover:#efeee4;--sel:#345be4;--ease-out:cubic-bezier(.23,1,.32,1);--lift:0 1px 2px #24242010,0 18px 48px -16px #24242040;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Inter",system-ui,sans-serif}
+button{font-weight:500;transition:background-color .16s var(--ease-out),color .16s var(--ease-out),border-color .16s var(--ease-out),transform .16s var(--ease-out)}
+button:active:not(:disabled){transform:scale(.97)}
+.primary{border:1px solid #d9b52a;box-shadow:inset 0 1px 0 #ffffff8c,0 1px 2px #2424201f;font-weight:600}
+@media(hover:hover){button:hover{background:var(--hover)}.primary:hover{background:#efc62e}}
+
+/* Launcher: the cut-out detective peeks over a ledge he brings himself; no box on any page. */
+.mascot{width:120px;height:66px;overflow:visible;border-radius:12px}
+.mascot::after{display:none}
+.sprite{width:120px;height:62px;background:var(--pose-peek) center bottom/contain no-repeat!important;transform:none;transition:transform .45s var(--ease-out)}
+@media(hover:hover){.mascot:hover .sprite{transform:translateY(-4px)}}
+.open .sprite{transform:translateY(-4px)}
+.collected .sprite{background-image:var(--pose-getaway)!important;background-size:contain;background-position:center bottom;animation:pp-getaway .5s var(--ease-out)}
+@keyframes pp-getaway{from{transform:translateX(14px) rotate(6deg);opacity:.4}to{transform:none;opacity:1}}
+
+.dock{gap:2px;padding:6px;border:1px solid var(--line);box-shadow:var(--lift);transform:translateX(10px) scale(.97);transform-origin:right bottom;transition:opacity .14s var(--ease-out),transform .24s var(--ease-out),visibility 0s .24s}
+.open .dock{transition:opacity .14s var(--ease-out),transform .24s var(--ease-out),visibility 0s}
+.dock button{padding:9px 12px;border-radius:9px;white-space:nowrap}
+
+.feedback{border-radius:12px;padding:11px 16px;box-shadow:var(--lift);animation:pp-rise .3s var(--ease-out)}
+.hint{border-radius:99px;padding:9px 18px;box-shadow:var(--lift);animation:pp-drop .3s var(--ease-out)}
+
+/* Selection: the same blue box, with a soft ring and a tag in tabular numerals. */
+.box{border-width:1.5px;border-radius:4px;box-shadow:0 0 0 4px #345be41f}
+.tag{font:500 11px/1.6 ui-monospace,"SF Mono",Menlo,monospace;font-variant-numeric:tabular-nums;padding:2px 7px;border-radius:5px 5px 5px 0;transform:translateY(calc(-100% - 2px))}
+.toolbar{padding:5px;border:1px solid var(--line);border-radius:12px;box-shadow:var(--lift);animation:pp-rise .26s var(--ease-out)}
+.toolbar .primary{padding:8px 12px}
+.beam{box-shadow:0 0 14px 3px #345be473}
+.scan-label{border-radius:99px;padding:8px 14px;box-shadow:var(--lift)}
+
+/* Window: arrives from just below with a short blur, like the onboarding steps. */
+.window{border:1px solid var(--line);box-shadow:var(--lift);transform-origin:bottom right;animation:pp-window .38s var(--ease-out)}
+@keyframes pp-window{from{opacity:0;transform:translateY(10px) scale(.98);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+@keyframes pp-rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pp-drop{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translateX(-50%)}}
+.head{padding:8px 8px 8px 14px;background:#f3f2ec}
+.handle{display:flex;align-items:center;gap:8px;flex:1;font:400 15px/1 Georgia,serif;letter-spacing:-.01em;cursor:grab;user-select:none;padding:6px 0}
+.handle:active{cursor:grabbing}
+.handle::before{content:'';width:34px;height:18px;background:var(--pose-peek) center bottom/contain no-repeat}
+.head [data-action=hide]{color:var(--muted);padding:7px 10px;font-size:12px}
+.body{padding:18px 20px 20px}
+.lesson-head h2{font-size:26px;line-height:1.12;letter-spacing:-.02em;text-wrap:balance}
+
+/* Tabs: the underline settles in rather than snapping. */
+.tabs{gap:4px;margin:16px 0 16px}
+.tabs button{position:relative;border:0;border-radius:8px;padding:8px 10px 10px;margin-bottom:0}
+.tabs button::after{content:'';position:absolute;left:10px;right:10px;bottom:-1px;height:2px;border-radius:2px;background:var(--ink);transform:scaleX(.4);opacity:0;transition:transform .3s var(--ease-out),opacity .2s var(--ease-out)}
+.tabs button[aria-selected=true]{border-bottom:0}
+.tabs button[aria-selected=true]::after{transform:none;opacity:1}
+
+.headline,.lead,.glance>div,.err.info{border:1px solid #e9e8e0}
+.headline p{text-wrap:pretty}
+dl{gap:9px 12px}
+.panel>h4,.sec h4,.lib-h{letter-spacing:.07em}
+
+/* Footer: secondary actions read quietly on the left, the one primary action sits right. */
+.foot{padding:10px 12px;gap:4px;align-items:center;background:#f3f2ec}
+.foot button{padding:8px 12px;border-radius:9px}
+.foot .primary{margin-left:auto}
+.err .row button{padding:8px 12px}
+
+.coach{border-radius:16px;box-shadow:var(--lift);animation:pp-rise .32s var(--ease-out)}
+.site-count{box-shadow:0 0 0 2px var(--surface),0 2px 6px #345be44d}
+
+@media(max-width:680px){.mascot{width:96px;height:54px}.sprite{width:96px;height:50px}}

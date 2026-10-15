@@ -40,6 +40,8 @@ export function createOverlay() {
   const q = <T extends HTMLElement = HTMLElement>(s:string) => root.querySelector<T>(s)!;
   q('.mascot').style.order = '2'; q('.dock').style.order = '1';
   q('.sprite').style.backgroundImage = `url("${chrome.runtime.getURL('/detective-poses.png')}")`;
+  // Cut-out poses (transparent around the figure) for the launcher, the window mark and the save moment.
+  for (const pose of ['peek', 'getaway']) host.style.setProperty(`--pose-${pose}`, `url("${chrome.runtime.getURL(`/poses/${pose}.png`)}")`);
   document.documentElement.append(host); host.hidden = true;
   let active=false,picking=false,selected:Element|null=null,facts:Facts|null=null,scope:'element'|'page'='element';
   let analysis:Analysis|null=null,lessonError:LessonError|null=null,lastImage:Image|null=null,hasKey=false,interpreting=false,hovered:Element|null=null;
