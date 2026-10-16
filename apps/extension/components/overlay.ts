@@ -51,7 +51,7 @@ export function createOverlay() {
       document.fonts.add(face); void face.load().catch(() => {});
     }
   }
-  for (const pose of ['peek', 'getaway']) host.style.setProperty(`--pose-${pose}`, `url("${chrome.runtime.getURL(`/poses/${pose}.png`)}")`);
+  for (const pose of ['peek', 'getaway']) host.style.setProperty(`--pose-${pose}`, `url("${chrome.runtime.getURL(`/poses/${pose}.svg`)}")`);
   document.documentElement.append(host); host.hidden = true;
   let mascot:Mascot|null=null;let active=false,picking=false,selected:Element|null=null,facts:Facts|null=null,scope:'element'|'page'='element';
   let analysis:Analysis|null=null,lessonError:LessonError|null=null,lastImage:Image|null=null,hasKey=false,interpreting=false,hovered:Element|null=null;

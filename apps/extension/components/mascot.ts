@@ -4,7 +4,7 @@ import type { Sound } from './sound';
  * The detective: a small character with moods, live eyes and manners.
  *
  * Moods map to drawn poses (public/poses). The resting pose has its eyes painted out
- * (peek-face.png) and redrawn here, so they can follow the cursor and blink.
+ * (peek-face.svg) and redrawn here, so they can follow the cursor and blink.
  *
  * Manners (edge cases):
  * - Loops (eyes, blinking, breathing) run only while the tab is visible and the detective is shown;
@@ -70,7 +70,7 @@ export function createMascot({ launcher, button, stage, url, sound, busy, signal
     const width = Math.min(120, (84 * w) / h);
     fig.style.width = `${width}px`;
     fig.style.height = `${(width * h) / w}px`;
-    fig.style.backgroundImage = `url("${url(`/poses/${p === 'peek' ? 'peek-face' : p}.png`)}")`;
+    fig.style.backgroundImage = `url("${url(`/poses/${p === 'peek' ? 'peek-face' : p}.svg`)}")`;
     fig.dataset.pose = p;
   }
 

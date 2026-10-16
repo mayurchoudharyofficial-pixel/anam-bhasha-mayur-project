@@ -33,9 +33,9 @@ export interface WelcomeState {
   shortcut: string | null;
 }
 
-/** Detective poses, cut from the supplied sheet by scripts/cut-poses.py (public/poses/*.png). */
+/** Detective poses, cut from the supplied sheet by scripts/cut-poses.py and vectorised by scripts/vectorize-poses.py (public/poses/*.svg). */
 export type Pose = 'peek' | 'think' | 'laptop' | 'idea' | 'getaway';
-export const poseUrl = (pose: Pose) => `/poses/${pose}.png`;
+export const poseUrl = (pose: Pose) => `/poses/${pose}.svg`;
 
 const LAST = WELCOME_STEPS.length - 1;
 
