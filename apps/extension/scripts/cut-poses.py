@@ -6,9 +6,10 @@ import numpy as np, sys
 root=sys.argv[1]; preview=sys.argv[2] if len(sys.argv) > 2 else None
 im=np.asarray(Image.open(f'{root}/public/detective-poses.png').convert('RGB')).astype(float)
 bg=np.array([250,245,235.])
-rects={'peek':(340,120,620,268),'think':(1215,295,1510,515),'laptop':(1205,50,1512,282),'idea':(380,545,615,740),'getaway':(1205,525,1512,742)}
-closed={'think','laptop','idea'}
-sheet=Image.new('RGBA',(5*320,250),(52,91,228,255))
+rects={'peek':(340,120,620,268),'think':(1215,295,1510,515),'laptop':(1205,50,1512,282),'idea':(380,545,615,740),'getaway':(1205,525,1512,742),
+       'magnify':(20,40,300,278),'notepad':(925,295,1200,515),'sleep':(350,760,630,965),'box':(915,540,1205,740)}
+closed={'think','laptop','idea','magnify','notepad'}
+sheet=Image.new('RGBA',(len(rects)*320,260),(52,91,228,255))
 for i,(k,(x0,y0,x1,y1)) in enumerate(rects.items()):
     c=im[y0:y1,x0:x1]
     a=np.clip(((bg-c)/bg).max(axis=2)*1.8,0,1)

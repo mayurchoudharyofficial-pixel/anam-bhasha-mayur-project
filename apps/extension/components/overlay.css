@@ -63,15 +63,47 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 .primary{background:var(--accent);color:#fff;font-weight:600;box-shadow:inset 0 1px 0 rgb(255 255 255 / .16),0 1px 2px rgb(15 16 18 / .16)}
 ::selection{background:var(--accent-soft)}
 
-/* Launcher: the cut-out detective peeks over his own ledge; no box on any page. */
-.mascot{width:120px;height:66px;overflow:visible;border-radius:12px}
+/* Launcher: the detective (components/mascot.ts). The stage is a fixed box; the figure can grow upward
+   from its baseline so taller poses never shift the menu. Position uses `translate`, so `transform`
+   stays free for the character's own animations, and `scale` / `rotate` carry the idle loops. */
+.mascot{width:120px;height:66px;overflow:visible;border-radius:12px;padding:0}
 .mascot::after{display:none}
 .mascot:hover{background:transparent}
-.sprite{width:120px;height:62px;background:var(--pose-peek) center bottom/contain no-repeat!important;transform:none;transition:transform .25s var(--ease-out)}
-@media(hover:hover) and (pointer:fine){.mascot:hover .sprite{transform:translateY(-3px)}}
-.open .sprite{transform:translateY(-3px)}
-.collected .sprite{background-image:var(--pose-getaway)!important;background-size:contain;background-position:center bottom;animation:pp-getaway .45s var(--ease-out)}
-@keyframes pp-getaway{from{transform:translateX(12px) rotate(5deg);opacity:.5}to{transform:none;opacity:1}}
+.sprite{position:relative;display:block;width:120px;height:62px;background:none!important;transform:none}
+.figure{position:absolute;left:50%;bottom:0;translate:-50% 0;background:center bottom/contain no-repeat;transform-origin:50% 100%;
+  /* a thin light rim keeps the black outline readable on dark websites */
+  filter:drop-shadow(0 0 .6px rgb(255 255 255 / .95)) drop-shadow(0 0 .6px rgb(255 255 255 / .95)) drop-shadow(0 6px 8px rgb(15 16 18 / .16));
+  transition:translate .25s var(--ease-out);animation:pp-breathe 3.6s ease-in-out infinite}
+@media(hover:hover) and (pointer:fine){.mascot:hover .figure{translate:-50% -4px}}
+.open .figure{translate:-50% -4px}
+.figure.duck{translate:-50% 48%;transition-duration:.2s}
+.figure[data-pose=magnify]{animation:pp-breathe 3.6s ease-in-out infinite,pp-sway 2.6s ease-in-out infinite}
+.figure.typing{animation:pp-type .32s ease-in-out infinite alternate}
+.figure[data-pose=sleep]{animation:pp-breathe 5.2s ease-in-out infinite}
+@keyframes pp-breathe{50%{scale:1.012 1.028}}
+@keyframes pp-sway{50%{rotate:-3deg}}
+@keyframes pp-type{to{rotate:1.2deg;scale:1 .99}}
+
+/* Live eyes for the resting pose: yellow lenses with pupils that follow the cursor. */
+.eye{position:absolute;display:none;background:#f5c84c;border-radius:50% 50% 46% 46%/40% 40% 60% 60%;overflow:hidden;transform-origin:50% 25%;transition:scale .18s var(--ease-out)}
+.figure[data-pose=peek] .eye{display:block}
+.eye.l{left:38.6%;top:68.6%;width:11.4%;height:16.4%}
+.eye.r{left:53.7%;top:70.8%;width:10.6%;height:14.2%}
+.eye i{position:absolute;left:28%;top:26%;width:46%;aspect-ratio:1;border-radius:50%;background:#141518}
+.curious .eye{scale:1.12}
+
+/* Speech: rare, short, and never covering the menu. */
+.bubble{position:absolute;right:18px;bottom:calc(100% + 6px);background:var(--ink);color:#fff;font-size:12px;font-weight:500;line-height:1.3;padding:7px 11px;border-radius:12px 12px 4px 12px;white-space:nowrap;pointer-events:none;box-shadow:var(--lift);transition:opacity .18s var(--ease-out),transform .22s var(--ease-out);transform-origin:right bottom}
+@starting-style{.bubble{opacity:0;transform:translateY(4px) scale(.96)}}
+.launcher.fs-hide{visibility:hidden}
+@media print{:host{display:none!important}}
+
+/* Sound switch: the speaker shows waves when on and a cross when muted. */
+.dock-sound{display:grid;place-items:center;width:34px;padding:0;color:var(--muted)}
+.dock-sound .mute{display:none}
+.dock-sound.muted .wave{display:none}
+.dock-sound.muted .mute{display:inline}
+@media(hover:hover) and (pointer:fine){.dock-sound:hover{color:var(--ink)}}
 
 /* Surfaces that float: shadow border instead of a solid line, one radius family. */
 .dock{gap:2px;padding:5px;background:var(--surface);border-radius:12px;box-shadow:var(--lift);transform:translateX(8px) scale(.97);transform-origin:right bottom;transition:opacity .15s var(--ease-out),transform .2s var(--ease-out),visibility 0s .2s}
@@ -185,10 +217,13 @@ pre{background:var(--canvas);box-shadow:var(--ring);font-family:"PP Mono",ui-mon
 .site-count{background:var(--accent);box-shadow:0 0 0 2px #fff,0 2px 6px rgb(94 106 210 / .35)}
 .site-ideas{color:var(--accent)}
 
-@media(max-width:680px){.mascot{width:96px;height:54px}.sprite{width:96px;height:50px}}
-@media(prefers-reduced-motion:reduce){.window{animation:none}}
+@media(max-width:680px){.mascot{width:96px;height:54px}.sprite{width:96px;height:50px;scale:.8;transform-origin:50% 100%}}
+@media(prefers-reduced-motion:reduce){.window,.figure{animation:none!important}.figure.duck{translate:-50% 0}}
 
 /* Close: ends the session on this page; the extension icon or Alt+P brings the detective back. */
 .dock-close{display:grid;place-items:center;width:34px;padding:0;margin-left:2px;color:var(--muted);position:relative}
 .dock-close::before{content:'';position:absolute;left:-3px;top:8px;bottom:8px;width:1px;background:var(--line)}
 @media(hover:hover) and (pointer:fine){.dock-close:hover{color:var(--fail);background:var(--fail-bg)}}
+/* The saved-ideas badge rides with the detective: it hides while he ducks, sleeps or leaves. */
+.site-count{transition:opacity .15s var(--ease-out)}
+.mascot:has(.figure.duck) .site-count,.mascot:has(.figure[data-pose=box]) .site-count,.mascot:has(.figure[data-pose=sleep]) .site-count{opacity:0}

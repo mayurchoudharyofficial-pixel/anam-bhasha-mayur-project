@@ -161,6 +161,31 @@ Following Emil Kowalski's design engineering rules (emilkowalski/skills, `emil-d
 - Onboarding is rare and first-time, so it may delight: a product demo, staggered arrivals, one damped spring for the detective, a pixel burst on Done.
 - Reduced motion removes movement and loops but keeps opacity and colour changes so state stays visible.
 
+## The detective (character)
+
+Built in `apps/extension/components/mascot.ts`, voice in `sound.ts`. He is the only playful element, so he gets the motion budget the rest of the interface does not.
+
+| Moment | Pose | Motion | Sound |
+|---|---|---|---|
+| Switched on | peek | pops up from behind his ledge (spring) | pop, only if sound is unlocked |
+| Resting | peek, live eyes | breathes, blinks every 2.4 to 6s (sometimes twice), pupils follow the cursor | none |
+| Hover | peek | leans up, eyes widen | none |
+| Click | any | squash and settle | pop (open) or tick (close menu) |
+| Poked 5 times in 1.6s | peek | dizzy wobble, pupils roll, "Hey! That tickles." | boing |
+| Picking | magnifying glass | slow sway | none (frequent) |
+| Scanning | laptop | typing wiggle | none |
+| Lesson ready | lightbulb, 2.4s | hop | ding |
+| Error | head scratch, 3.2s | head tilt | bonk |
+| Idea saved | running with the file, 2.4s | dash in | coin |
+| No activity for 60s | asleep, zzz | slow breathing | none |
+| Woken by movement | peek | startle hop, "Oh! I'm up." | none |
+| Page scrolls | peek | ducks behind the ledge, returns 380ms after scrolling stops | none |
+| Close | box | hops into his box and fades | whoosh |
+
+**Sound rules.** Synthesised with Web Audio (no files). Silent until the person presses something of ours on the page; only pointer-caused (keyboard repeats stay silent); never while the tab is hidden; one cue per 90ms; quiet master gain; one mute switch in the menu, remembered.
+
+**Edge cases.** Eye loop runs only while the cursor moves and stops itself; all loops pause when the tab is hidden; hidden during fullscreen video and print; a thin light rim keeps him readable on dark sites; the saved-ideas badge hides while he ducks, sleeps or leaves; a newer mood always interrupts an older one; reduced motion keeps the pose changes and drops every movement.
+
 ## Do's and Don'ts
 
 - **Do** keep one primary action per view, in indigo.
