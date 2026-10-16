@@ -397,3 +397,5 @@ pre{margin:0;max-height:300px;overflow:auto;white-space:pre-wrap;overflow-wrap:a
   .beam{top:50%}
 }
 @media print{:host{display:none!important}}
+.saved-state .go{opacity:.6;margin-left:-2px}
+.foot>*{flex-shrink:1;min-width:0}
