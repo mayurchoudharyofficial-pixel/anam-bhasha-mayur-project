@@ -187,3 +187,8 @@ pre{background:var(--canvas);box-shadow:var(--ring);font-family:"PP Mono",ui-mon
 
 @media(max-width:680px){.mascot{width:96px;height:54px}.sprite{width:96px;height:50px}}
 @media(prefers-reduced-motion:reduce){.window{animation:none}}
+
+/* Close: ends the session on this page; the extension icon or Alt+P brings the detective back. */
+.dock-close{display:grid;place-items:center;width:34px;padding:0;margin-left:2px;color:var(--muted);position:relative}
+.dock-close::before{content:'';position:absolute;left:-3px;top:8px;bottom:8px;width:1px;background:var(--line)}
+@media(hover:hover) and (pointer:fine){.dock-close:hover{color:var(--fail);background:var(--fail-bg)}}
