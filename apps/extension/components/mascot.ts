@@ -79,7 +79,7 @@ export function createMascot({ launcher, button, stage, url, sound, busy, signal
     if (p === pose && !force) return;
     pose = p;
     if (!canAnimate || reduced() || !shown) { paint(p); return; }
-    fig.getAnimations().forEach((a) => a.cancel());
+    fig.getAnimations?.().forEach((a) => a.cancel());
     const out = fig.animate([{ transform: 'none', filter: 'blur(0)' }, { transform: 'translateY(6%) scale(.94, .9)', filter: 'blur(2px)' }], { duration: 90, easing: EASE_OUT });
     out.onfinish = () => {
       if (pose !== p) return; // a newer pose already took over
@@ -110,6 +110,26 @@ export function createMascot({ launcher, button, stage, url, sound, busy, signal
     raf = requestAnimationFrame(frame);
   }
 
+  /**
+   * When the cursor is still, the eyes keep living: quick glances to new spots (saccades), and now and
+   * then a slow full roll. Unit coordinates, scaled to the eye in frame().
+   */
+  const wander = { x: 0, y: 0, next: 0, roll: 0 };
+  function wanderTarget(now: number) {
+    if (wander.roll) {
+      const k = (now - wander.roll) / 1100;
+      if (k >= 1) { wander.roll = 0; wander.next = now + 600; }
+      else { const a = -Math.PI / 2 + k * Math.PI * 2; return { x: Math.cos(a), y: Math.sin(a) }; }
+    }
+    if (now >= wander.next) {
+      if (Math.random() < 0.14) { wander.roll = now; return { x: 0, y: -1 }; }
+      const a = Math.random() * Math.PI * 2, d = 0.35 + Math.random() * 0.65;
+      wander.x = Math.cos(a) * d; wander.y = Math.sin(a) * d * 0.8;
+      wander.next = now + 700 + Math.random() * 1700;
+    }
+    return { x: wander.x, y: wander.y };
+  }
+
   function frame() {
     raf = 0;
     if (!shown || pose !== 'peek') return;
@@ -118,7 +138,13 @@ export function createMascot({ launcher, button, stage, url, sound, busy, signal
     const max = { x: eye.width * 0.24, y: eye.height * 0.18 };
     let tx = 0;
     let ty = 0;
-    if (pointer) {
+    const now = performance.now();
+    const still = !pointer || now - lastMove > 1400;
+    if (still) {
+      const w = wanderTarget(now);
+      tx = w.x * max.x;
+      ty = w.y * max.y;
+    } else if (pointer) {
       const dx = pointer.x - (r.left + r.width / 2);
       const dy = pointer.y - (r.top + r.height * 0.78);
       const d = Math.hypot(dx, dy) || 1;
@@ -126,10 +152,11 @@ export function createMascot({ launcher, button, stage, url, sound, busy, signal
       tx = (dx / d) * reach * max.x;
       ty = (dy / d) * reach * max.y;
     }
-    cur = { x: cur.x + (tx - cur.x) * 0.2, y: cur.y + (ty - cur.y) * 0.2 };
+    const k = still && !wander.roll ? 0.32 : 0.2; // glances are quick, following is smooth
+    cur = { x: cur.x + (tx - cur.x) * k, y: cur.y + (ty - cur.y) * k };
     for (const p of pupils) p.style.transform = `translate(${cur.x.toFixed(2)}px, ${cur.y.toFixed(2)}px)`;
-    const settled = Math.abs(tx - cur.x) < 0.05 && Math.abs(ty - cur.y) < 0.05;
-    if (!settled || performance.now() - lastMove < 400) raf = requestAnimationFrame(frame);
+    // Always alive while shown and resting; the loop stops only when hidden, asleep or another pose.
+    raf = requestAnimationFrame(frame);
   }
 
   let blinkTimer = 0;
@@ -225,12 +252,36 @@ export function createMascot({ launcher, button, stage, url, sound, busy, signal
     else sound.play(launcher.classList.contains('open') ? 'tick' : 'pop');
   }, { signal });
 
+  // Peekaboo: every so often he ducks behind the ledge and pops back up, so he feels alive. Never while
+  // the person is busy, the menu is open, the pointer is on him, or motion is reduced.
+  let peekTimer = 0;
+  let hovering = false;
+  function schedulePeek() {
+    clearTimeout(peekTimer);
+    peekTimer = window.setTimeout(() => {
+      const free = shown && mood === 'idle' && !busy() && !hovering && !launcher.classList.contains('open') && !document.hidden && !reduced() && !fig.classList.contains('duck');
+      if (free) {
+        const quick = Math.random() < 0.3;
+        fig.classList.add(quick ? 'duck' : 'away');
+        window.setTimeout(() => {
+          fig.classList.remove('duck', 'away');
+          if (canAnimate && shown) anim(fig, [{ transform: 'translateY(6%)' }, { transform: 'translateY(-6%)', offset: 0.5 }, { transform: 'none' }], { duration: 520, easing: SPRING });
+          if (!quick && Math.random() < 0.5) window.setTimeout(() => { wander.roll = performance.now(); }, 500);
+        }, quick ? 420 : 900 + Math.random() * 900);
+      }
+      schedulePeek();
+    }, 9000 + Math.random() * 9000);
+  }
+  schedulePeek();
+  button.addEventListener('pointerenter', () => { hovering = true; fig.classList.remove('away'); }, { signal });
+  button.addEventListener('pointerleave', () => { hovering = false; }, { signal });
+
   // Fall asleep when nobody has touched anything for a while, and never mid-task.
   const sleeper = window.setInterval(() => {
     if (!shown || mood !== 'idle' || busy() || launcher.classList.contains('open')) return;
     if (performance.now() - lastActive > SLEEP_AFTER) { setMood('sleep'); say('', 0); }
   }, 5000);
-  signal.addEventListener('abort', () => { clearInterval(sleeper); clearTimeout(blinkTimer); clearTimeout(settle); clearTimeout(bubbleTimer); cancelAnimationFrame(raf); });
+  signal.addEventListener('abort', () => { clearTimeout(peekTimer); clearInterval(sleeper); clearTimeout(blinkTimer); clearTimeout(settle); clearTimeout(bubbleTimer); cancelAnimationFrame(raf); });
 
   paint('peek');
 
@@ -258,7 +309,7 @@ export function createMascot({ launcher, button, stage, url, sound, busy, signal
     /** An idea was saved: he dashes off with it, then comes back. */
     celebrate() {
       clearTimeout(settle);
-      fig.getAnimations().forEach((a) => a.cancel());
+      fig.getAnimations?.().forEach((a) => a.cancel());
       pose = 'getaway';
       paint('getaway');
       sound.play('coin', true);
@@ -270,7 +321,7 @@ export function createMascot({ launcher, button, stage, url, sound, busy, signal
       clearTimeout(settle);
       say('');
       if (reduced() || !canAnimate) { done(); return; }
-      fig.getAnimations().forEach((a) => a.cancel());
+      fig.getAnimations?.().forEach((a) => a.cancel());
       pose = 'box';
       paint('box');
       sound.play('whoosh');
@@ -278,7 +329,7 @@ export function createMascot({ launcher, button, stage, url, sound, busy, signal
       a.onfinish = () => { a.cancel(); done(); };
     },
     /** The menu opened: eyes go to the buttons. */
-    attend() { pointer = (() => { const r = launcher.getBoundingClientRect(); return { x: r.left - 120, y: r.top + r.height / 2 }; })(); look(); },
+    attend() { lastMove = performance.now(); pointer = (() => { const r = launcher.getBoundingClientRect(); return { x: r.left - 120, y: r.top + r.height / 2 }; })(); look(); },
   };
 }
 

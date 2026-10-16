@@ -1,5 +1,5 @@
 /* Capture viewer. Used inside the overlay's shadow root and in the Library tab. */
-.viewer{position:fixed;inset:0;z-index:2147483646;display:flex;flex-direction:column;background:#141518;color:#f4f5f6;font:13px/1.5 "PP Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;pointer-events:auto}
+.viewer{position:fixed;inset:0;z-index:2147483646;display:flex;flex-direction:column;background:#141518;color:#f4f5f6;font:13px/1.5 "PP Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;pointer-events:auto}
 .viewer button{font:inherit;color:#f4f5f6;background:#ffffff14;border:1px solid #ffffff1f;border-radius:8px;padding:6px 10px;cursor:pointer}
 .viewer button:hover{background:#ffffff26}.viewer button[aria-pressed=true]{background:#f4f5f6;color:#141518;border-color:#f4f5f6}.viewer button:disabled{opacity:.4;cursor:not-allowed}
 .viewer :focus-visible{outline:3px solid #8b95e8;outline-offset:2px}

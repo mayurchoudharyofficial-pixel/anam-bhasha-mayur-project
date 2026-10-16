@@ -1,4 +1,5 @@
 @import "../../components/fonts.css";
+@import "../../components/tokens.css";
 /* Pixel Peeper Library tab. Tokens follow DESIGN.md; lesson styles come from overlay.css. */
 :root {
   --paper: #f7f8f8; --surface: #ffffff; --canvas: #f2f3f5; --ink: #1b1c1f; --muted: #6b6f76; --line: #e6e7ea;
@@ -7,7 +8,7 @@
   color-scheme: light;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--paper); color: var(--ink); font: 14px/1.5 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 14px/1.5 var(--sans); }
 a { color: inherit; }
 button { font: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 9px; }
 button:hover { background: #eef0f2; }
@@ -18,8 +19,8 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 :focus-visible { outline: 3px solid var(--selection); outline-offset: 2px; }
 
 .top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 4vw, 40px); background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-.brand { font:600 22px/1 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; text-decoration: none; letter-spacing: -.01em; }
-.brand span { font: 500 12px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; color: var(--muted); margin-left: 6px; letter-spacing: .04em; text-transform: uppercase; }
+.brand { font:600 22px/1 var(--sans); text-decoration: none; letter-spacing: -.01em; }
+.brand span { font: 500 12px var(--sans); color: var(--muted); margin-left: 6px; letter-spacing: .04em; text-transform: uppercase; }
 #app { max-width: 1240px; margin: 0 auto; padding: 24px clamp(16px, 4vw, 40px) 120px; }
 
 .toolbar-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 8px; }
@@ -31,9 +32,9 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .filter[aria-pressed="true"] span { color: #d5d7dc; }
 
 .block { margin-top: 28px; }
-.block > h2 { font:600 26px/1.2 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 0 0 4px; }
-.block > h2 small, .site h3 small { font: 400 13px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; color: var(--muted); margin-left: 6px; }
-.site h3 { display: flex; align-items: center; gap: 8px; font: 600 14px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 18px 0 10px; }
+.block > h2 { font:600 26px/1.2 var(--sans); margin: 0 0 4px; }
+.block > h2 small, .site h3 small { font: 400 13px var(--sans); color: var(--muted); margin-left: 6px; }
+.site h3 { display: flex; align-items: center; gap: 8px; font: 600 14px var(--sans); margin: 18px 0 10px; }
 .fav { width: 16px; height: 16px; border-radius: 3px; display: none; }
 .fav.ok { display: inline-block; }
 .fav.ok + .fav-fallback { display: none; }
@@ -62,13 +63,13 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .selbar button:not(.primary) { background: transparent; color: var(--surface); border-color: #ffffff33; }
 
 .empty { margin: 60px auto; max-width: 520px; text-align: center; }
-.empty h2 { font:600 28px/1.2 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 0 0 8px; }
+.empty h2 { font:600 28px/1.2 var(--sans); margin: 0 0 8px; }
 .empty p { color: var(--muted); }
 
 .back { font-size: 13px; color: var(--muted); text-decoration: none; }
 .back:hover { color: var(--ink); }
 .idea-head { margin-bottom: 20px; }
-.title-input { display: block; width: 100%; margin: 10px 0 4px; font:600 30px/1.2 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; color: var(--ink); background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 4px 8px; margin-left: -9px; }
+.title-input { display: block; width: 100%; margin: 10px 0 4px; font:600 30px/1.2 var(--sans); color: var(--ink); background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 4px 8px; margin-left: -9px; }
 .title-input:hover { border-color: var(--line); }
 .title-input:focus { background: var(--surface); border-color: var(--selection); outline: none; }
 .idea-head .muted { margin: 0; font-size: 13px; color: var(--muted); }
@@ -83,17 +84,17 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .lesson-col { background: var(--paper); }
 .lesson-col .tabs { margin-top: 0; }
 .note { display: block; margin-top: 24px; }
-.note span { display: flex; justify-content: space-between; font: 600 11px/1.4 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
+.note span { display: flex; justify-content: space-between; font: 600 11px/1.4 var(--sans); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
 .note em { font-style: normal; text-transform: none; letter-spacing: 0; font-weight: 500; color: #4e5ac4; background: #eef0fc; padding: 0 6px; border-radius: 99px; }
 .note textarea { width: 100%; font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); resize: vertical; }
 
-.compare h1 { font:600 32px/1.2 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 10px 0 18px; }
-.compare h2 { display: flex; gap: 8px; align-items: center; font: 600 13px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 28px 0 10px; }
+.compare h1 { font:600 32px/1.2 var(--sans); margin: 10px 0 18px; }
+.compare h2 { display: flex; gap: 8px; align-items: center; font: 600 13px var(--sans); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 28px 0 10px; }
 .cols { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 14px; }
 .col { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 0 12px; overflow: hidden; display: flex; flex-direction: column; gap: 2px; }
 .col > strong, .col > .muted, .col > .hl { padding: 0 12px; }
 .col .thumb { margin-bottom: 8px; }
-.col .hl { font:600 15px/1.4 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 6px 0 0; }
+.col .hl { font:600 15px/1.4 var(--sans); margin: 6px 0 0; }
 .letter { position: absolute; top: 8px; left: 8px; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: var(--surface); display: grid; place-items: center; font-size: 12px; font-weight: 700; z-index: 1; }
 .diff { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 13px; }
 .diff th, .diff td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -106,7 +107,7 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .borrow label { margin-right: 12px; font-size: 13px; }
 .formats { display: flex; gap: 6px; margin-bottom: 10px; }
 .formats [aria-pressed="true"] { background: #eef0fc; border-color: #9aa2e6; }
-.compare pre { background: var(--canvas); border-radius: 12px; padding: 14px; font: 12px/1.6 "JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+.compare pre { background: var(--canvas); border-radius: 12px; padding: 14px; font: 12px/1.6 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
 
 .toast { position: fixed; left: 50%; bottom: 88px; transform: translateX(-50%); background: var(--ink); color: var(--surface); padding: 10px 16px; border-radius: 10px; font-size: 13px; display: flex; gap: 10px; align-items: center; box-shadow: 0 12px 40px #24242040; }
 .toast button { background: transparent; color: var(--primary); border: 0; padding: 0; font-weight: 600; }
@@ -122,10 +123,10 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .insight .point { padding: 10px 0; border-top: 1px solid var(--line); }
 .insight .point:first-child { border-top: 0; padding-top: 0; }
 .insight .point p { margin: 2px 0 6px; }
-.insight .sub { font: 600 12px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 14px 0 4px; }
+.insight .sub { font: 600 12px var(--sans); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 14px 0 4px; }
 .insight .meta { margin-top: 10px; }
 .insight .link { border: 0; background: none; padding: 0; color: var(--selection); text-decoration: underline; font-size: 11px; }
-.letter-inline { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--surface); font: 700 11px/1 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin-right: 6px; flex: none; }
+.letter-inline { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--surface); font: 700 11px/1 var(--sans); margin-right: 6px; flex: none; }
 .borrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
 .borrow fieldset { display: grid; gap: 4px; }
 .borrow .opt { display: flex; align-items: center; gap: 6px; margin: 0; padding: 6px 8px; border-radius: 8px; cursor: pointer; font-size: 13px; }
@@ -165,3 +166,23 @@ button.primary { color: #fff; font-weight: 600; box-shadow: inset 0 1px 0 rgb(25
 .toast button { color: #aab2f0; }
 .top { border-bottom-color: var(--line); }
 .tabs button, .tabs button:hover { box-shadow: none; background: transparent; }
+
+/* ---- Visual language v2 (DESIGN.md): same type, tags, gradients and corners as the lesson window ---- */
+* { corner-shape: var(--sq); }
+body { -webkit-font-smoothing: antialiased; }
+::selection { background: rgb(94 106 210 / .2); }
+.brand, .block > h2, .empty h2, .title-input, .compact h1, .compare h1, .site h3, .compare h2, .col .hl, h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; }
+.brand { font-weight: 700; display: inline-flex; align-items: center; gap: 10px; }
+.brand::before { content: ""; width: 48px; height: 24px; background: url("/poses/peek.svg") left bottom / contain no-repeat; }
+button { font-family: var(--display); font-weight: 600; letter-spacing: -.01em; border: 0; border-radius: 12px; background: var(--g-control); box-shadow: inset 0 0 0 1px var(--line), var(--hi), var(--lift-1); transition: box-shadow .15s var(--ease-out), background .15s var(--ease-out), transform .15s var(--ease-out); }
+button:hover { background: var(--g-control); box-shadow: inset 0 0 0 1px var(--line-strong), var(--hi), var(--lift-2); }
+button:active:not(:disabled) { transform: scale(.97); }
+button.primary { color: #fff; background: var(--g-primary); box-shadow: inset 0 0 0 1px #4a55bd, var(--hi-strong), var(--glow-primary); }
+button.primary:hover { background: var(--g-primary-hover); box-shadow: inset 0 0 0 1px #4a55bd, var(--hi-strong), var(--glow-primary); }
+button.danger:hover { color: var(--fail); background: var(--g-fail); box-shadow: inset 0 0 0 1px #f2c9c4; }
+.filter { border-radius: 999px; }
+.filter[aria-pressed="true"] { color: #fff; background: linear-gradient(#2a2b30, #1b1c1f); box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), 0 4px 10px -4px rgb(15 16 18 / .4); }
+.search { border: 0; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line), inset 0 1px 2px rgb(15 16 18 / .05); }
+.search:focus { outline: none; box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 0 4px rgb(94 106 210 / .14); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.top { background: color-mix(in srgb, #fff 86%, transparent); }

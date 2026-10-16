@@ -27,44 +27,47 @@ colors:
   mascot-yellow: "#f5c84c"
 typography:
   display:
-    fontFamily: Inter
-    fontSize: "40px"
-    fontWeight: 600
-    lineHeight: 1.1
-    letterSpacing: "-0.03em"
+    fontFamily: Schibsted Grotesk
+    fontSize: "48px"
+    fontWeight: 700
+    lineHeight: 1.0
+    letterSpacing: "-0.04em"
   title:
-    fontFamily: Inter
-    fontSize: "20px"
-    fontWeight: 600
+    fontFamily: Schibsted Grotesk
+    fontSize: "22px"
+    fontWeight: 700
     lineHeight: 1.25
     letterSpacing: "-0.02em"
   lesson-headline:
-    fontFamily: Inter
-    fontSize: "17px"
-    fontWeight: 600
+    fontFamily: Schibsted Grotesk
+    fontSize: "19px"
+    fontWeight: 700
     lineHeight: 1.4
     letterSpacing: "-0.015em"
   body:
-    fontFamily: Inter
+    fontFamily: Roboto
     fontSize: "13.5px"
     fontWeight: 400
     lineHeight: 1.5
   label:
-    fontFamily: Inter
-    fontSize: "11px"
-    fontWeight: 600
-    letterSpacing: "0.04em"
+    fontFamily: Roboto
+    fontSize: "12px"
+    fontWeight: 500
+    letterSpacing: "-0.01em"
   value:
     fontFamily: JetBrains Mono
     fontSize: "12px"
     fontWeight: 500
     fontFeature: tabular-nums
 rounded:
+  tag: "4px"
   chip: "6px"
   button: "8px"
+  control: "10px"
   card: "12px"
-  window: "14px"
+  window: "20px"
   pill: "99px"
+  smoothing: "100% (iOS squircle; CSS corner-shape)"
 spacing:
   xs: "4px"
   sm: "8px"
@@ -195,3 +198,48 @@ Built in `apps/extension/components/mascot.ts`, voice in `sound.ts`. He is the o
 - **Don't** use yellow for buttons; it belongs to the mascot.
 - **Don't** put artwork inside measurements or lesson results.
 - **Don't** let any overlay style or font leak into the inspected website.
+
+## Visual language v2 (from Figma, "Lesson window" frames)
+
+The approved Lesson, Rules and Measurements frames (Figma file `1LeW6xrkcWExXaHIwbU4qf`, section "Section 2147263056") are the reference for every surface. These rules are the contract; when in doubt, match the frames.
+
+**Type.** Three faces, each with one job. All bundled (SIL OFL) and registered in the page under private names so a website's own fonts are never touched.
+
+| Role | Face | Sizes | Tracking |
+|---|---|---|---|
+| Display, titles, section heads, buttons | Schibsted Grotesk 600/700 | 48, 32, 22, 19, 15, 14 | -4% at 48, -3% at 32, -2% at 20 to 24, -1.5% at 17 to 19, -1% at 14 to 15 |
+| Reading text, labels, tabs | Roboto 400/500/600 | 17, 14, 13, 12, 11 | 0, labels -1% |
+| Measured values, element tags, code | JetBrains Mono 400/700, tabular figures | 12, 11, 10 | 0 |
+
+Mono is only for things that were measured or are code; it is never decoration.
+
+**Surfaces and gradients.** Gradients are vertical, quiet and always light-to-slightly-darker, so a surface reads as gently raised. Every raised surface also gets a 1px white inner highlight on its top edge.
+
+| Recipe | From → To | Edge |
+|---|---|---|
+| Window | `#ffffff` → `#fbfbfd` | hairline + layered lift |
+| Selection band | `#f5f6ff` → `#ffffff` | none |
+| Capture stage | `#f5f6f9` → `#eceef3` + dot grid + indigo glow behind the selection | hairline |
+| Neutral control (chip, tab pill, quiet button) | `#ffffff` → `#f8f9fa` | hairline |
+| Measured tint | `#f0faf4` → `#dff2e6` | `#93c6ab` |
+| Inferred tint | `#fff7ec` → `#fbe8cf` | `#d5b28b` |
+| Indigo tint (icon tile) | `#f5f6ff` → `#e3e6fb` | `#cfd4f6` |
+| Primary button | `#7884e6` → `#5f6bd3` (55%) → `#525dc6` | `#4a55bd`, white top highlight, indigo glow shadow |
+
+**Tags.** 6px radius, 3/8 padding, a tint fill with a 1px tinted outline, Roboto Medium 12 at -1%, optional 12px icon. Measured is green with a shield icon, Inferred is amber with a sparkle icon. Amber means Inferred and nothing else; "watch out" uses the fail red.
+
+**Evidence chips.** White to faint gray, hairline, 6px radius: a green dot (measured), the label in Roboto 12 muted, the value in JetBrains Mono Bold 12.
+
+**Icons.** Phosphor Duotone only (`components/icons.ts`), 12/14/16/20px, drawn in currentColor with the second tone at 20%. Section icons sit in 28px tiles with a tinted gradient. No unicode glyphs or emoji as icons.
+
+**Corners.** Radii 4 (small tags), 6 (tags, chips), 8 (buttons, tiles), 10 (segmented track, primary button), 12 (cards, stage), 20 (window). Every rounded corner is a continuous (iOS, 100% smoothing) curve: `corner-shape: superellipse(1.6)` where the browser supports it, with the radius scaled up so the visual size matches Figma. True circles (dots, eyes, avatars) stay round.
+
+**Spacing.** 4px grid: 4, 6, 8, 10, 12, 16, 20, 24, 32. Window gutter 16. More space above a heading than below it.
+
+**Depth.** Shadows always have an offset and a soft blur. The window: `0 0 0 1px` hairline, `0 1px 2px`, `0 24px 48px -12px`, plus a faint white outer ring so it stays separate on dark websites.
+
+**Interaction.** Every control has hover (pointer devices only), pressed (`scale(.97)`), focus-visible (2px indigo ring, 2px offset) and disabled states. Ease-out `cubic-bezier(.23,1,.32,1)` for enter/exit, under 300ms for chrome; the spring only for the detective and the selection lock.
+
+**The pick.** The outline is the product's signature: it glides between elements, takes the element's own corner radius, shows the element's padding as a fine indigo hatch, carries a mono size tag, and on click it locks with a pulse, corner handles and a soft spotlight that dims the rest of the page.
+
+**Sound.** Synthesised, quiet, caused by the person. The onboarding has its own short generative score (soft pad and plucks), with one visible switch to turn it off.

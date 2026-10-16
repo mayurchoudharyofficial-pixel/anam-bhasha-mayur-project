@@ -10,7 +10,7 @@
  * - One switch mutes everything, remembered on this device.
  */
 
-export type Cue = 'pop' | 'blip' | 'ding' | 'coin' | 'bonk' | 'boing' | 'whoosh' | 'tick';
+export type Cue = 'pop' | 'blip' | 'ding' | 'coin' | 'bonk' | 'boing' | 'whoosh' | 'tick' | 'lock' | 'select' | 'chime' | 'shimmer' | 'swish' | 'success';
 
 const MUTE_KEY = 'pixelpeeper.muted';
 
@@ -84,6 +84,14 @@ export function createSound() {
       case 'bonk': tone('sine', 240, 120, t, 0.16, 0.9); break;
       case 'boing': tone('sine', 260, 640, t, 0.18, 0.7); tone('sine', 640, 300, t + 0.18, 0.22, 0.5); break;
       case 'whoosh': noise(t, 0.28, 2400, 500, 0.6); break;
+      // The selection locks: a soft double click that rises a fifth.
+      case 'lock': tone('triangle', 660, 660, t, 0.05, 0.5); tone('sine', 990, 990, t + 0.05, 0.14, 0.45); break;
+      case 'select': tone('sine', 740, 880, t, 0.07, 0.45); break;
+      // A bright major arpeggio for good news.
+      case 'chime': [1046.5, 1318.5, 1568, 2093].forEach((f, i) => tone('sine', f, f, t + i * 0.06, 0.5 - i * 0.06, 0.38)); break;
+      case 'shimmer': noise(t, 0.6, 6000, 9000, 0.12); [1568, 2093, 2637].forEach((f, i) => tone('sine', f, f, t + 0.1 + i * 0.09, 0.3, 0.12)); break;
+      case 'swish': noise(t, 0.22, 1800, 900, 0.22); break;
+      case 'success': [784, 987.8, 1174.7, 1568].forEach((f, i) => tone('triangle', f, f, t + i * 0.08, 0.34, 0.5)); break;
     }
   }
 
@@ -92,7 +100,10 @@ export function createSound() {
     try { void chrome.storage?.local.set({ [MUTE_KEY]: next }); } catch { /* preview or tests */ }
   }
 
-  return { gesture, play, setMuted, isMuted: () => muted };
+  /** The unlocked audio graph, shared with the onboarding music so one switch governs both. */
+  const audio = () => (ctx && master ? { ctx, master } : null);
+
+  return { gesture, play, setMuted, isMuted: () => muted, audio };
 }
 
 export type Sound = ReturnType<typeof createSound>;

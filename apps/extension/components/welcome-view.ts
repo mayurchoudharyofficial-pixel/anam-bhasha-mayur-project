@@ -1,6 +1,8 @@
 import { DEFAULT_MODELS } from '@pixelpeeper/analysis';
 import type { Goal, Level } from '@pixelpeeper/schema';
-import { esc } from './lesson';
+import { esc, inferredTag, measuredTag } from './lesson';
+import { icon } from './icons';
+import { liveDetective } from './live-eyes';
 import { PROVIDERS, type Provider } from './settings';
 
 /**
@@ -43,20 +45,23 @@ const LAST = WELCOME_STEPS.length - 1;
 const svg = (d: string, cls = 'ico') =>
   `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 export const ICON = {
-  arrow: svg('<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>'),
-  back: svg('<path d="M19 12H5"/><path d="m11 18-6-6 6-6"/>'),
+  arrow: icon('arrow-right', 18),
+  back: icon('arrow-left', 18),
   check: svg('<path class="draw" d="m5 12.5 4.5 4.5L19 7.5"/>'),
-  lock: svg('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
-  alert: svg('<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><path d="M12 16.2v.1"/>'),
-  replay: svg('<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/>'),
-  puzzle: svg('<path d="M10 4.5a2 2 0 1 1 4 0V6h3a1 1 0 0 1 1 1v3h-1.5a2 2 0 1 0 0 4H18v3a1 1 0 0 1-1 1h-3v-1.5a2 2 0 1 0-4 0V18H7a1 1 0 0 1-1-1v-3h1.5a2 2 0 1 0 0-4H6V7a1 1 0 0 1 1-1h3z"/>'),
-  pin: svg('<path d="M9 4h6l-1 6 3 3H7l3-3z"/><path d="M12 13v7"/>'),
+  lock: icon('lock-simple', 18),
+  alert: icon('warning', 16),
+  replay: icon('arrow-counter-clockwise', 14),
+  puzzle: icon('puzzle-piece', 18),
+  pin: icon('push-pin', 16),
+  sparkle: icon('sparkle', 16),
   cursor: `<svg class="cursor-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5 18.5 12l-6 1.6-3 5.9z" fill="#1b1c1f" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
 };
 
 /** The detective. Decorative: the copy carries the meaning. */
 export const mascot = (pose: Pose, extra = '') =>
-  `<img class="mascot ${extra}" src="${poseUrl(pose)}" alt="" aria-hidden="true" draggable="false" data-pose="${pose}">`;
+  pose === 'peek'
+    ? liveDetective(`mascot ${extra}`)
+    : `<img class="mascot ${extra}" src="${poseUrl(pose)}" alt="" aria-hidden="true" draggable="false" data-pose="${pose}">`;
 
 const progress = (step: number) =>
   `<ol class="progress" aria-label="Setup progress">${WELCOME_STEPS.map(
@@ -83,20 +88,20 @@ function whatItDoes(s: WelcomeState): string {
             <span class="plan-cta" data-pick="Button">Start free trial</span>
           </div>
         </div>
-        <div class="pick-outline" aria-hidden="true"><i class="wash"></i><i class="e t"></i><i class="e b"></i><i class="e l"></i><i class="e r"></i><span class="pick-tag"></span></div>
+        <div class="pick-outline" aria-hidden="true"><i class="wash"></i><i class="e t"></i><i class="e b"></i><i class="e l"></i><i class="e r"></i><i class="hd nw"></i><i class="hd ne"></i><i class="hd sw"></i><i class="hd se"></i><span class="pick-tag"></span></div>
         <div class="beam" aria-hidden="true"></div>
         <span class="cursor" aria-hidden="true">${ICON.cursor}</span>
       </div>
       <div class="lesson-card" aria-label="Example lesson">
-        <div class="lesson-head"><strong>Plan call-to-action</strong><span>acme.design · Pricing</span></div>
-        <div class="claim"><span class="badge measured">Measured</span><p>Text contrast <b data-measure="contrast">16.1:1</b>, passes AA. Target <b data-measure="size">164×40px</b>.</p></div>
-        <div class="claim"><span class="badge inferred">Inferred</span><p>The only dark, filled shape in a light card, so it reads as the plan’s main action.</p></div>
+        <div class="lesson-head"><span class="lc-mark">${liveDetective('tiny')}</span><strong>Plan call-to-action</strong><span>acme.design · Pricing</span></div>
+        <div class="claim">${inferredTag()}<p class="hl">The only dark, filled shape in a light card, so it reads as the plan’s main action.</p></div>
+        <div class="claim chips"><span class="chip"><i class="mdot"></i>Contrast <b data-measure="contrast">16.1:1</b></span><span class="chip"><i class="mdot"></i>Target <b data-measure="size">164×40px</b></span></div>
       </div>
       <figcaption class="demo-foot"><span class="hint">Hover the card to measure it yourself.</span><button class="quiet small" data-demo="replay">${ICON.replay}<span>Replay</span></button></figcaption>
     </figure>
     <ul class="explain" data-reveal>
-      <li><span class="badge measured">Measured</span><span>Read straight from the page by code. Same answer every time.</span></li>
-      <li><span class="badge inferred">Inferred</span><span>The AI’s interpretation, always tied to a measured value. Never a made-up number.</span></li>
+      <li>${measuredTag()}<span>Read straight from the page by code. Same answer every time.</span></li>
+      <li>${inferredTag()}<span>The AI’s interpretation, always tied to a measured value. Never a made-up number.</span></li>
     </ul>
     ${nav(s, 'Get started')}`;
 }
@@ -153,8 +158,12 @@ export function stepView(s: WelcomeState): string {
   return [whatItDoes, whatYouWant, aiLessons, tryIt][s.step]!(s);
 }
 
+/** The sound switch: an equaliser that dances while the score plays. */
+const soundToggle = () =>
+  `<button class="sound-toggle" data-go="sound" aria-pressed="false" title="Music and sound"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lbl">Sound off</span></button>`;
+
 export function headerView(s: WelcomeState): string {
-  return `<header class="top"><div class="brand">${mascot('peek', 'brand-mark')}<span>Pixel Peeper</span></div>${s.step < LAST ? '<button class="quiet skip" data-go="skip">Skip setup</button>' : '<span class="skip-gap"></span>'}</header>${progress(s.step)}`;
+  return `<header class="top"><div class="brand">${mascot('peek', 'brand-mark')}<span>Pixel Peeper</span></div><div class="top-right">${soundToggle()}${s.step < LAST ? '<button class="quiet skip" data-go="skip">Skip setup</button>' : '<span class="skip-gap"></span>'}</div></header>${progress(s.step)}`;
 }
 
 export function welcomeView(s: WelcomeState): string {

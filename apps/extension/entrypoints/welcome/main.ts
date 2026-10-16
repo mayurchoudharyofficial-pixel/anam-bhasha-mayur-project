@@ -2,6 +2,9 @@ import type { Goal, Level, Profile } from '@pixelpeeper/schema';
 import { loadSettings, saveSettings, type Provider, type Settings } from '../../components/settings';
 import { WELCOME_STEPS, poseUrl, headerView, stepView, type WelcomeState } from '../../components/welcome-view';
 import { mountPixelLandscape } from '../../components/pixel-landscape';
+import { createSound, type Cue } from '../../components/sound';
+import { createMusic } from '../../components/music';
+import { animateEyes } from '../../components/live-eyes';
 import './welcome.css';
 
 /** First-run setup. Every step is optional; answers are saved as you go. */
@@ -10,6 +13,39 @@ const app = document.getElementById('app')!;
 let settings: Settings;
 const state: WelcomeState = { step: 0, goals: ['learn'], level: 'practising', provider: 'groq', hasKey: {}, keyStatus: { kind: 'idle' }, shortcut: null };
 const LAST = WELCOME_STEPS.length - 1;
+
+// ---------------------------------------------------------------------------------------------
+// Sound and music. Nothing plays until the person presses or types something (browser policy); after
+// that the score fades in unless they turned sound off before. One switch governs both.
+
+const sound = createSound();
+const music = createMusic(sound.audio);
+/** Each step is a little livelier than the last. */
+const INTENSITY = [0.28, 0.42, 0.5, 0.78];
+const sfx = (cue: Cue) => sound.play(cue, true);
+
+function syncSoundToggle() {
+  const b = app.querySelector<HTMLButtonElement>('.sound-toggle');
+  if (!b) return;
+  const on = music.isPlaying();
+  b.setAttribute('aria-pressed', String(on));
+  b.classList.toggle('playing', on);
+  b.querySelector('.lbl')!.textContent = on ? 'Sound on' : 'Sound off';
+  b.title = on ? 'Music and sound are on. Click to turn off.' : 'Turn on music and sound';
+}
+
+function unlock() {
+  sound.gesture();
+  if (!sound.isMuted() && !music.isPlaying() && music.start()) { music.setIntensity(INTENSITY[state.step] ?? 0.3); syncSoundToggle(); }
+}
+addEventListener('pointerdown', unlock, { capture: true });
+addEventListener('keydown', unlock, { capture: true });
+
+function toggleSound() {
+  if (music.isPlaying()) { sfx('tick'); music.stop(); sound.setMuted(true); }
+  else { sound.setMuted(false); sound.gesture(); music.start(); music.setIntensity(INTENSITY[state.step] ?? 0.3); sfx('blip'); }
+  syncSoundToggle();
+}
 
 const ask = <T,>(msg: object) => chrome.runtime.sendMessage(msg) as Promise<T>;
 const saveProfile = (patch: Partial<Profile>) => ask({ type: 'pp:profile:set', patch });
@@ -79,6 +115,8 @@ async function show(next: number) {
 
   state.step = next;
   stepEl.dataset.step = String(next);
+  if (!first) sfx('swish');
+  music.setIntensity(INTENSITY[next] ?? 0.3);
   stepEl.innerHTML = stepView(state);
   stepEl.getAnimations().forEach((a) => a.cancel());
   syncChrome();
@@ -108,6 +146,7 @@ function afterRender(entering: boolean) {
 /** The step's detective springs in. Re-renders of the same step leave it alone. */
 function popMascots(entering: boolean) {
   if (!entering || reduced.matches) return;
+  if (stepEl.querySelector('.speaker')) setTimeout(() => sfx('pop'), 260);
   stepEl.querySelectorAll<HTMLElement>('.speaker').forEach((m) =>
     m.animate(
       [{ opacity: 0, transform: 'translateY(10px) scale(.92) rotate(-4deg)' }, { opacity: 1, transform: 'none' }],
@@ -200,15 +239,18 @@ async function playPick(id: number) {
   const toCard = cursor.animate([{ transform: start }, { transform: pointAt(cursor, card, 0.7, 0.3) }], { duration: 760, easing: EASE_IN_OUT, fill: 'forwards' });
   if (!(await wait(420, id))) return;
   outlineTo(card);
+  sfx('tick');
   if (!(await done(toCard)) || !(await wait(260, id))) return;
   const toCta = cursor.animate([{ transform: pointAt(cursor, card, 0.7, 0.3) }, { transform: pointAt(cursor, cta) }], { duration: 620, easing: EASE_IN_OUT, fill: 'forwards' });
   if (!(await wait(380, id))) return;
   outlineTo(cta);
+  sfx('tick');
   if (!(await done(toCta)) || !(await wait(180, id))) return;
 
   // Click: the cursor presses, the outline commits.
   cursor.animate([{ transform: pointAt(cursor, cta) }, { transform: `${pointAt(cursor, cta)} scale(.86)` }, { transform: pointAt(cursor, cta) }], { duration: 220, easing: EASE_OUT });
   demo.classList.add('picked');
+  sfx('lock');
   if (!(await wait(240, id))) return;
 
   // Scan: one beam pass over the selection (the overlay's own signature).
@@ -222,18 +264,35 @@ async function playPick(id: number) {
     { duration: 900, easing: EASE_IN_OUT },
   );
   cursor.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, delay: 200, easing: EASE_OUT, fill: 'forwards' });
+  sfx('shimmer');
   if (!(await done(scan)) || id !== run) return;
 
   lesson.classList.add('in');
+  sfx('ding');
   if (!(await wait(700, id))) return;
   demo.classList.add('live');
 }
 
+let lastDemoTarget: HTMLElement | null = null;
 function onDemoHover(e: PointerEvent) {
   const demo = q('.demo');
   if (state.step !== 0 || !demo?.classList.contains('live')) return;
   const target = (e.target as Element).closest<HTMLElement>('[data-pick]');
-  if (target && demo.contains(target)) outlineTo(target);
+  if (target && demo.contains(target) && target !== lastDemoTarget) { lastDemoTarget = target; outlineTo(target); sfx('tick'); }
+}
+
+/** The detective on the first step ducks behind the browser frame now and then, and pops back up. */
+function peekaboo() {
+  const loop = () => setTimeout(async () => {
+    const p = stepEl?.querySelector<HTMLElement>('.peeker');
+    if (p && !reduced.matches && !document.hidden) {
+      await done(p.animate([{ transform: 'none' }, { transform: 'translateY(78%)' }], { duration: 380, easing: EASE_IN_OUT, fill: 'forwards' }));
+      await new Promise((r) => setTimeout(r, 700 + Math.random() * 900));
+      p.animate([{ transform: 'translateY(78%)' }, { transform: 'none' }], { duration: 720, easing: SPRING, fill: 'forwards' }).finished.then(() => p.getAnimations().forEach((a) => a.cancel()), () => {});
+    }
+    loop();
+  }, 8000 + Math.random() * 7000);
+  loop();
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -261,6 +320,7 @@ async function playPin(id: number) {
     await done(cursor.animate([{ transform: rest }, { transform: pos(puzzle) }], { duration: 700, easing: EASE_IN_OUT, fill: 'forwards' }));
     if (id !== run) return;
     tb.classList.add('menu');
+    sfx('tick');
     if (!(await wait(520, id))) return;
     await done(cursor.animate([{ transform: pos(puzzle) }, { transform: pos(pin) }], { duration: 560, easing: EASE_IN_OUT, fill: 'forwards' }));
     if (id !== run) return;
@@ -268,6 +328,7 @@ async function playPin(id: number) {
     if (!(await wait(160, id))) return;
     tb.classList.remove('pressing');
     tb.classList.add('pinned');
+    sfx('blip');
     if (!(await wait(560, id))) return;
     tb.classList.remove('menu');
     cursor.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, fill: 'forwards' });
@@ -281,6 +342,8 @@ async function playPin(id: number) {
 // Finish: the detective makes its getaway with a small burst of pixels, then the tab closes.
 
 async function finish(button: HTMLElement) {
+  sfx('success');
+  music.stop(1.6);
   await saveProfile({ onboarded: true });
   if (!reduced.matches) {
     const r = button.getBoundingClientRect();
@@ -325,6 +388,7 @@ async function go(where: string, el: HTMLElement) {
   if (where === 'skip') { void saveProfile({ onboarded: true }); return show(LAST); }
   if (where === 'library') { await ask({ type: 'pp:open-library' }); return; }
   if (where === 'done') return finish(el);
+  if (where === 'sound') return toggleSound();
 }
 
 async function testKey() {
@@ -335,12 +399,13 @@ async function testKey() {
   patch();
   const res = await ask<{ error: string | null }>({ type: 'pp:test-key', provider: state.provider, key });
   if (state.step !== 2) return;
-  if (res.error) { state.keyStatus = { kind: 'error', message: res.error }; patch(); shake(); return; }
+  if (res.error) { state.keyStatus = { kind: 'error', message: res.error }; patch(); shake(); sfx('bonk'); return; }
   settings = { ...settings, provider: state.provider, keys: { ...settings.keys, [state.provider]: key } };
   await saveSettings(settings);
   state.hasKey = { ...state.hasKey, [state.provider]: true };
   state.keyStatus = { kind: 'ok', message: 'Key works and is saved. Lessons are on.' };
   patch();
+  sfx('chime');
 }
 
 /** One short horizontal shake on the key field: the error is about that field. */
@@ -366,6 +431,7 @@ app.addEventListener('pointerover', onDemoHover);
 
 app.addEventListener('change', (e) => {
   const input = e.target as HTMLInputElement;
+  sfx(input.checked || input.type === 'radio' ? 'select' : 'tick');
   if (input.name === 'goal') {
     state.goals = [...app.querySelectorAll<HTMLInputElement>('input[name=goal]:checked')].map((i) => i.value as Goal);
     void saveProfile({ goals: state.goals });
@@ -395,5 +461,8 @@ void (async () => {
   state.shortcut = commands.find((c) => c.name === 'pick')?.shortcut || null;
   renderShell();
   mountPixelLandscape();
+  animateEyes(app);
+  peekaboo();
   void show(0);
+  syncSoundToggle();
 })();
