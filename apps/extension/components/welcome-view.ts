@@ -51,7 +51,7 @@ export const ICON = {
   replay: svg('<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/>'),
   puzzle: svg('<path d="M10 4.5a2 2 0 1 1 4 0V6h3a1 1 0 0 1 1 1v3h-1.5a2 2 0 1 0 0 4H18v3a1 1 0 0 1-1 1h-3v-1.5a2 2 0 1 0-4 0V18H7a1 1 0 0 1-1-1v-3h1.5a2 2 0 1 0 0-4H6V7a1 1 0 0 1 1-1h3z"/>'),
   pin: svg('<path d="M9 4h6l-1 6 3 3H7l3-3z"/><path d="M12 13v7"/>'),
-  cursor: `<svg class="cursor-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5 18.5 12l-6 1.6-3 5.9z" fill="#252523" stroke="#fffefa" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+  cursor: `<svg class="cursor-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5 18.5 12l-6 1.6-3 5.9z" fill="#1b1c1f" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
 };
 
 /** The detective. Decorative: the copy carries the meaning. */

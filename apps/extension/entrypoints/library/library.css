@@ -1,15 +1,16 @@
+@import "../../components/fonts.css";
 /* Pixel Peeper Library tab. Tokens follow DESIGN.md; lesson styles come from overlay.css. */
 :root {
-  --paper: #f8f7f2; --surface: #fffefa; --canvas: #efeee7; --ink: #252523; --muted: #62625d; --line: #deded5;
-  --primary: #f9d54a; --primary-hover: #efc62e; --selection: #345be4; --measured: #216659; --measured-bg: #e0f2e9;
-  --inferred: #665296; --inferred-bg: #eee8fa; --fail: #9b2c1f; --fail-bg: #fde8e4;
+  --paper: #f7f8f8; --surface: #ffffff; --canvas: #f2f3f5; --ink: #1b1c1f; --muted: #6b6f76; --line: #e6e7ea;
+  --primary: #5e6ad2; --primary-hover: #4e5ac4; --selection: #5e6ad2; --measured: #17804a; --measured-bg: #e6f5ec;
+  --inferred: #9a5408; --inferred-bg: #fdf1e2; --fail: #c0362c; --fail-bg: #fdeceb;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--paper); color: var(--ink); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 14px/1.5 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; }
 a { color: inherit; }
 button { font: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 9px; }
-button:hover { background: #efeee4; }
+button:hover { background: #eef0f2; }
 button.primary { background: var(--primary); border-color: var(--primary); }
 button.primary:hover { background: var(--primary-hover); }
 button:disabled { opacity: .45; cursor: not-allowed; }
@@ -17,8 +18,8 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 :focus-visible { outline: 3px solid var(--selection); outline-offset: 2px; }
 
 .top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 4vw, 40px); background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-.brand { font: 400 22px/1 Georgia, serif; text-decoration: none; letter-spacing: -.01em; }
-.brand span { font: 500 12px system-ui; color: var(--muted); margin-left: 6px; letter-spacing: .04em; text-transform: uppercase; }
+.brand { font:600 22px/1 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; text-decoration: none; letter-spacing: -.01em; }
+.brand span { font: 500 12px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; color: var(--muted); margin-left: 6px; letter-spacing: .04em; text-transform: uppercase; }
 #app { max-width: 1240px; margin: 0 auto; padding: 24px clamp(16px, 4vw, 40px) 120px; }
 
 .toolbar-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 8px; }
@@ -27,12 +28,12 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .filter { border-radius: 99px; padding: 6px 12px; font-size: 13px; }
 .filter span { color: var(--muted); font-variant-numeric: tabular-nums; margin-left: 2px; }
 .filter[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
-.filter[aria-pressed="true"] span { color: #c9c8c0; }
+.filter[aria-pressed="true"] span { color: #d5d7dc; }
 
 .block { margin-top: 28px; }
-.block > h2 { font: 400 26px/1.2 Georgia, serif; margin: 0 0 4px; }
-.block > h2 small, .site h3 small { font: 400 13px system-ui; color: var(--muted); margin-left: 6px; }
-.site h3 { display: flex; align-items: center; gap: 8px; font: 600 14px system-ui; margin: 18px 0 10px; }
+.block > h2 { font:600 26px/1.2 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 0 0 4px; }
+.block > h2 small, .site h3 small { font: 400 13px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; color: var(--muted); margin-left: 6px; }
+.site h3 { display: flex; align-items: center; gap: 8px; font: 600 14px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 18px 0 10px; }
 .fav { width: 16px; height: 16px; border-radius: 3px; display: none; }
 .fav.ok { display: inline-block; }
 .fav.ok + .fav-fallback { display: none; }
@@ -40,10 +41,10 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
 .card { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color .12s, box-shadow .12s; }
-.card:hover { border-color: #c9c8bd; box-shadow: 0 6px 20px #2424200f; }
+.card:hover { border-color: #d5d7dc; box-shadow: 0 6px 20px #2424200f; }
 .card.selected { border-color: var(--selection); box-shadow: 0 0 0 2px var(--selection); }
 .card-open { display: block; text-decoration: none; }
-.thumb { aspect-ratio: 16 / 10; display: grid; place-items: center; background: repeating-conic-gradient(#f1f0ea 0 25%, #fff 0 50%) 0 0 / 14px 14px; border-bottom: 1px solid var(--line); overflow: hidden; }
+.thumb { aspect-ratio: 16 / 10; display: grid; place-items: center; background: repeating-conic-gradient(#f2f3f5 0 25%, #fff 0 50%) 0 0 / 14px 14px; border-bottom: 1px solid var(--line); overflow: hidden; }
 .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
 .no-shot { font-size: 12px; color: var(--muted); padding: 12px; text-align: center; }
 .card-meta { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px 12px; }
@@ -61,13 +62,13 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .selbar button:not(.primary) { background: transparent; color: var(--surface); border-color: #ffffff33; }
 
 .empty { margin: 60px auto; max-width: 520px; text-align: center; }
-.empty h2 { font: 400 28px/1.2 Georgia, serif; margin: 0 0 8px; }
+.empty h2 { font:600 28px/1.2 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 0 0 8px; }
 .empty p { color: var(--muted); }
 
 .back { font-size: 13px; color: var(--muted); text-decoration: none; }
 .back:hover { color: var(--ink); }
 .idea-head { margin-bottom: 20px; }
-.title-input { display: block; width: 100%; margin: 10px 0 4px; font: 400 30px/1.2 Georgia, serif; color: var(--ink); background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 4px 8px; margin-left: -9px; }
+.title-input { display: block; width: 100%; margin: 10px 0 4px; font:600 30px/1.2 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; color: var(--ink); background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 4px 8px; margin-left: -9px; }
 .title-input:hover { border-color: var(--line); }
 .title-input:focus { background: var(--surface); border-color: var(--selection); outline: none; }
 .idea-head .muted { margin: 0; font-size: 13px; color: var(--muted); }
@@ -76,36 +77,36 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .idea-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr); gap: 28px; align-items: start; }
 @media (max-width: 900px) { .idea-body { grid-template-columns: 1fr; } }
 .shot-big { margin: 0; position: sticky; top: 76px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-.shot-big img { display: block; width: 100%; height: auto; max-height: 70vh; object-fit: contain; background: repeating-conic-gradient(#f1f0ea 0 25%, #fff 0 50%) 0 0 / 14px 14px; }
+.shot-big img { display: block; width: 100%; height: auto; max-height: 70vh; object-fit: contain; background: repeating-conic-gradient(#f2f3f5 0 25%, #fff 0 50%) 0 0 / 14px 14px; }
 .shot-big .no-shot { padding: 60px 24px; }
 .shot-big figcaption { font-size: 12px; color: var(--muted); padding: 8px 12px; border-top: 1px solid var(--line); }
 .lesson-col { background: var(--paper); }
 .lesson-col .tabs { margin-top: 0; }
 .note { display: block; margin-top: 24px; }
-.note span { display: flex; justify-content: space-between; font: 600 11px/1.4 system-ui; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
-.note em { font-style: normal; text-transform: none; letter-spacing: 0; font-weight: 500; color: #8a6d00; background: #fff3bd; padding: 0 6px; border-radius: 99px; }
+.note span { display: flex; justify-content: space-between; font: 600 11px/1.4 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
+.note em { font-style: normal; text-transform: none; letter-spacing: 0; font-weight: 500; color: #4e5ac4; background: #eef0fc; padding: 0 6px; border-radius: 99px; }
 .note textarea { width: 100%; font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); resize: vertical; }
 
-.compare h1 { font: 400 32px/1.2 Georgia, serif; margin: 10px 0 18px; }
-.compare h2 { display: flex; gap: 8px; align-items: center; font: 600 13px system-ui; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 28px 0 10px; }
+.compare h1 { font:600 32px/1.2 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 10px 0 18px; }
+.compare h2 { display: flex; gap: 8px; align-items: center; font: 600 13px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 28px 0 10px; }
 .cols { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 14px; }
 .col { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 0 12px; overflow: hidden; display: flex; flex-direction: column; gap: 2px; }
 .col > strong, .col > .muted, .col > .hl { padding: 0 12px; }
 .col .thumb { margin-bottom: 8px; }
-.col .hl { font: 400 15px/1.4 Georgia, serif; margin: 6px 0 0; }
+.col .hl { font:600 15px/1.4 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin: 6px 0 0; }
 .letter { position: absolute; top: 8px; left: 8px; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: var(--surface); display: grid; place-items: center; font-size: 12px; font-weight: 700; z-index: 1; }
 .diff { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 13px; }
 .diff th, .diff td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .diff thead th { font-size: 12px; color: var(--muted); }
 .diff tbody th { font-weight: 500; color: var(--muted); width: 22%; }
-.diff tr.differs td { background: #fff8d6; }
+.diff tr.differs td { background: #f3f4fd; }
 .borrow { display: flex; flex-wrap: wrap; gap: 10px; }
 .borrow fieldset { border: 1px solid var(--line); border-radius: 12px; padding: 8px 14px 10px; background: var(--surface); margin: 0; }
 .borrow legend { font-size: 12px; color: var(--muted); padding: 0 4px; }
 .borrow label { margin-right: 12px; font-size: 13px; }
 .formats { display: flex; gap: 6px; margin-bottom: 10px; }
-.formats [aria-pressed="true"] { background: #fff3bd; border-color: #f2d97a; }
-.compare pre { background: var(--canvas); border-radius: 12px; padding: 14px; font: 12px/1.6 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+.formats [aria-pressed="true"] { background: #eef0fc; border-color: #9aa2e6; }
+.compare pre { background: var(--canvas); border-radius: 12px; padding: 14px; font: 12px/1.6 "JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 .toast { position: fixed; left: 50%; bottom: 88px; transform: translateX(-50%); background: var(--ink); color: var(--surface); padding: 10px 16px; border-radius: 10px; font-size: 13px; display: flex; gap: 10px; align-items: center; box-shadow: 0 12px 40px #24242040; }
 .toast button { background: transparent; color: var(--primary); border: 0; padding: 0; font-weight: 600; }
@@ -115,20 +116,20 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .err .row button, .panel button { border: 1px solid var(--line); }
 .shot-open { display: block; position: relative; width: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; cursor: zoom-in; }
 .shot-open:hover { background: transparent; }
-.shot-hint { position: absolute; right: 10px; bottom: 10px; font-size: 12px; background: #252523e6; color: #fffefa; padding: 4px 10px; border-radius: 99px; opacity: 0; transition: opacity .12s; }
+.shot-hint { position: absolute; right: 10px; bottom: 10px; font-size: 12px; background: #252523e6; color: #ffffff; padding: 4px 10px; border-radius: 99px; opacity: 0; transition: opacity .12s; }
 .shot-open:hover .shot-hint, .shot-open:focus-visible .shot-hint { opacity: 1; }
 .insight, .rationale { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
 .insight .point { padding: 10px 0; border-top: 1px solid var(--line); }
 .insight .point:first-child { border-top: 0; padding-top: 0; }
 .insight .point p { margin: 2px 0 6px; }
-.insight .sub { font: 600 12px system-ui; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 14px 0 4px; }
+.insight .sub { font: 600 12px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 14px 0 4px; }
 .insight .meta { margin-top: 10px; }
 .insight .link { border: 0; background: none; padding: 0; color: var(--selection); text-decoration: underline; font-size: 11px; }
-.letter-inline { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--surface); font: 700 11px/1 system-ui; margin-right: 6px; flex: none; }
+.letter-inline { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--surface); font: 700 11px/1 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; margin-right: 6px; flex: none; }
 .borrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
 .borrow fieldset { display: grid; gap: 4px; }
 .borrow .opt { display: flex; align-items: center; gap: 6px; margin: 0; padding: 6px 8px; border-radius: 8px; cursor: pointer; font-size: 13px; }
-.borrow .opt:has(input:checked) { background: #fff3bd; }
+.borrow .opt:has(input:checked) { background: #eef0fc; }
 .borrow .opt input { accent-color: var(--ink); }
 .borrow .val { overflow-wrap: anywhere; }
 .borrow .omit { color: var(--muted); }
@@ -139,5 +140,28 @@ button.danger:hover { color: var(--fail); background: var(--fail-bg); border-col
 .contrast.neutral { background: var(--canvas); color: var(--muted); }
 .rationale-head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; min-height: 28px; }
 .rationale textarea { width: 100%; font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); resize: vertical; }
-.badge.user { background: #fff3bd; color: #6b5100; }
+.badge.user { background: #eef0fc; color: #4e5ac4; }
 .compare .pending { font-size: 13px; color: var(--inferred); }
+
+/* ---- Theme layer: Linear system, light (see DESIGN.md). ------------------------------------------ */
+body { font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+button { border: 0; box-shadow: inset 0 0 0 1px var(--line); transition: background-color .15s cubic-bezier(.23,1,.32,1), box-shadow .15s cubic-bezier(.23,1,.32,1), transform .15s cubic-bezier(.23,1,.32,1); font-weight: 500; }
+button:hover { background: var(--surface); }
+@media (hover: hover) and (pointer: fine) { button:hover { background: #f2f3f5; } button.primary:hover { background: var(--primary-hover); } }
+button:active:not(:disabled) { transform: scale(.97); }
+button.primary { color: #fff; font-weight: 600; box-shadow: inset 0 1px 0 rgb(255 255 255 / .16), 0 1px 2px rgb(15 16 18 / .16); }
+:focus-visible { outline: 2px solid var(--selection); outline-offset: 2px; }
+.brand { font-size: 18px; letter-spacing: -.02em; }
+.block > h2, .empty h2, .compare h1, .title-input { letter-spacing: -.025em; }
+.search, .note textarea, .rationale textarea { border: 0; box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .15s cubic-bezier(.23,1,.32,1); }
+.search:focus, .note textarea:focus, .rationale textarea:focus { outline: none; box-shadow: inset 0 0 0 1px var(--selection), 0 0 0 3px rgb(94 106 210 / .16); }
+.card, .col, .shot-big, .insight, .rationale, .diff, .borrow fieldset { border: 0; box-shadow: 0 0 0 1px rgb(15 16 18 / .07), 0 1px 2px rgb(15 16 18 / .04); }
+.card { border-radius: 12px; transition: box-shadow .2s cubic-bezier(.23,1,.32,1), transform .2s cubic-bezier(.23,1,.32,1); }
+@media (hover: hover) and (pointer: fine) { .card:hover { border-color: transparent; box-shadow: 0 0 0 1px rgb(15 16 18 / .09), 0 12px 28px -12px rgb(15 16 18 / .22); transform: translateY(-1px); } }
+.card.selected { box-shadow: 0 0 0 2px var(--selection), 0 8px 24px -12px rgb(94 106 210 / .4); }
+.card .pick, .card .keep { border: 0; box-shadow: 0 0 0 1px rgb(15 16 18 / .1), 0 1px 2px rgb(15 16 18 / .06); }
+.selbar { border-radius: 14px; box-shadow: 0 16px 40px -12px rgb(15 16 18 / .4); }
+.toast { box-shadow: 0 16px 40px -12px rgb(15 16 18 / .4); }
+.toast button { color: #aab2f0; }
+.top { border-bottom-color: var(--line); }
+.tabs button, .tabs button:hover { box-shadow: none; background: transparent; }

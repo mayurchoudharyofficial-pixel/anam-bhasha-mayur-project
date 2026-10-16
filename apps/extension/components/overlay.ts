@@ -41,6 +41,14 @@ export function createOverlay() {
   q('.mascot').style.order = '2'; q('.dock').style.order = '1';
   q('.sprite').style.backgroundImage = `url("${chrome.runtime.getURL('/detective-poses.png')}")`;
   // Cut-out poses (transparent around the figure) for the launcher, the window mark and the save moment.
+  // Fonts declared inside a shadow root are ignored by Chrome, so register them on the document under
+  // private names: a page that names Inter in its own CSS must keep rendering exactly as it did.
+  if (typeof FontFace !== 'undefined' && document.fonts) for (const [family, file] of [['PP Inter', 'inter'], ['PP Mono', 'jetbrains-mono']] as const) {
+    if (![...document.fonts].some((f) => f.family.replace(/"/g, '') === family)) {
+      const face = new FontFace(family, `url("${chrome.runtime.getURL(`/fonts/${file}.woff2`)}") format("woff2")`, { weight: '100 900' });
+      document.fonts.add(face); void face.load().catch(() => {});
+    }
+  }
   for (const pose of ['peek', 'getaway']) host.style.setProperty(`--pose-${pose}`, `url("${chrome.runtime.getURL(`/poses/${pose}.png`)}")`);
   document.documentElement.append(host); host.hidden = true;
   let active=false,picking=false,selected:Element|null=null,facts:Facts|null=null,scope:'element'|'page'='element';

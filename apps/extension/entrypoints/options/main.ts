@@ -1,4 +1,5 @@
 import { DEFAULT_MODELS } from '@pixelpeeper/analysis';
+import '../../components/fonts.css';
 import { loadSettings, PROVIDERS, saveSettings, type Provider, type Settings } from '../../components/settings';
 
 const app = document.getElementById('app')!;
@@ -6,19 +7,19 @@ const ids = Object.keys(PROVIDERS) as Provider[];
 
 app.innerHTML = `
   <style>
-    :root{color-scheme:light;font:15px/1.6 system-ui;color:#252523;background:#f8f7f2}
+    :root{color-scheme:light;font:15px/1.6 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:#1b1c1f;background:#f7f8f8}
     body{margin:0}main{max-width:560px;margin:48px auto;padding:0 16px}
-    h1{font:400 32px/1.2 Georgia,serif;margin:0 0 8px}h2{font:500 15px system-ui;margin:28px 0 8px}
-    p,li{color:#4a4a45}.muted{color:#62625d;font-size:13px}
+    h1{font:600 32px/1.2 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;margin:0 0 8px}h2{font:500 15px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;margin:28px 0 8px}
+    p,li{color:#3c3f44}.muted{color:#6b6f76;font-size:13px}
     label{display:block;font-weight:500;margin:14px 0 6px}
-    input[type=password],input[type=text]{width:100%;box-sizing:border-box;font:inherit;padding:10px 12px;border:1px solid #cfcfc5;border-radius:9px;background:#fffefa}
-    input:focus-visible,button:focus-visible{outline:3px solid #345be4;outline-offset:2px}
+    input[type=password],input[type=text]{width:100%;box-sizing:border-box;font:inherit;padding:10px 12px;border:1px solid #d5d7dc;border-radius:9px;background:#ffffff}
+    input:focus-visible,button:focus-visible{outline:3px solid #5e6ad2;outline-offset:2px}
     fieldset{border:0;padding:0;margin:0;display:flex;gap:8px}
-    fieldset label{margin:0;font-weight:400;display:flex;gap:6px;align-items:center;padding:8px 14px;border:1px solid #cfcfc5;border-radius:99px;background:#fffefa;cursor:pointer}
-    fieldset label:has(input:checked){border-color:#252523;font-weight:500}
+    fieldset label{margin:0;font-weight:400;display:flex;gap:6px;align-items:center;padding:8px 14px;border:1px solid #d5d7dc;border-radius:99px;background:#ffffff;cursor:pointer}
+    fieldset label:has(input:checked){border-color:#5e6ad2;box-shadow:0 0 0 1px #5e6ad2;font-weight:500}
     .row{display:flex;gap:8px;margin-top:14px}
-    button{font:inherit;padding:9px 16px;border-radius:9px;border:0;cursor:pointer;background:#eeede5}
-    button.primary{background:#f9d54a}#status{min-height:1.6em;margin-top:10px;font-size:13px}
+    button{font:inherit;padding:9px 16px;border-radius:9px;border:0;cursor:pointer;background:#eef0f2}
+    button.primary{background:#5e6ad2;color:#fff;font-weight:600}button{transition:transform .15s cubic-bezier(.23,1,.32,1),background-color .15s}button:active{transform:scale(.97)}h1{letter-spacing:-.025em}#status{min-height:1.6em;margin-top:10px;font-size:13px}
   </style>
   <h1>Pixel Peeper settings</h1>
   <p>Pixel Peeper measures styles on your device. AI design lessons use your own API key.</p>

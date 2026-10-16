@@ -15,7 +15,15 @@ const px = (v: unknown) => `${v}px`;
 /** Box values (padding, radius): one number when all sides match. */
 const list = (v: unknown) => (Array.isArray(v) ? (new Set(v).size === 1 ? `${v[0]}px` : v.map((n) => `${n}`).join(' ') + 'px') : String(v));
 const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
-const swatch = (v: unknown) => `<i class="sw" style="background:${esc(v)}"></i>${esc(v)}`;
+/** Show colours the way designers write them: #RRGGBB, plus opacity when it is not solid. */
+const hex = (v: unknown) => {
+  const m = String(v).match(/rgba?\(([^)]+)\)/);
+  if (!m) return String(v);
+  const [r, g, b, a = 1] = m[1]!.split(',').map((n) => parseFloat(n));
+  const h = '#' + [r, g, b].map((n) => Math.round(n!).toString(16).padStart(2, '0')).join('').toUpperCase();
+  return a < 1 ? `${h} · ${Math.round(a * 100)}%` : h;
+};
+const swatch = (v: unknown) => `<i class="sw" style="background:${esc(v)}"></i>${esc(hex(v))}`;
 
 const LABELS: Record<string, [string, (v: unknown) => string]> = {
   'typography.fontFamily': ['Font', (v) => esc(String(v).split(',')[0]!.replace(/["']/g, ''))],

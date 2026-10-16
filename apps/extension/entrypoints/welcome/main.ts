@@ -14,10 +14,10 @@ const ask = <T,>(msg: object) => chrome.runtime.sendMessage(msg) as Promise<T>;
 const saveProfile = (patch: Partial<Profile>) => ask({ type: 'pp:profile:set', patch });
 
 // ---------------------------------------------------------------------------------------------
-// Motion vocabulary. Exits are quicker than entrances; nothing starts from scale(0).
+// Motion vocabulary (Emil Kowalski's rules): ease-out for anything entering or leaving, ease-in-out for
+// movement on screen, never ease-in; exits are quicker than entrances; nothing starts from scale(0).
 
 const EASE_OUT = 'cubic-bezier(.23, 1, .32, 1)';
-const EASE_IN = 'cubic-bezier(.55, 0, 1, .45)';
 const EASE_IN_OUT = 'cubic-bezier(.77, 0, .175, 1)';
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 /** A damped spring (about 8% overshoot), for the few things that should feel physical. */
@@ -70,7 +70,7 @@ async function show(next: number) {
     stepEl.getAnimations({ subtree: true }).forEach((a) => a.cancel());
     const leave = stepEl.animate(
       [{ opacity: 1, transform: 'none', filter: 'blur(0)' }, { opacity: 0, transform: `translateX(${-dir * 12}px)`, filter: 'blur(3px)' }],
-      { duration: 160, easing: EASE_IN, fill: 'forwards' },
+      { duration: 140, easing: EASE_OUT, fill: 'forwards' },
     );
     await done(leave);
     if (id !== run) return;
@@ -283,7 +283,7 @@ async function finish(button: HTMLElement) {
   await saveProfile({ onboarded: true });
   if (!reduced.matches) {
     const r = button.getBoundingClientRect();
-    const colors = ['#f9d54a', '#345be4', '#216659', '#665296', '#252523'];
+    const colors = ['#f5c84c', '#5e6ad2', '#22a05a', '#d38a3a', '#1b1c1f'];
     for (let i = 0; i < 18; i++) {
       const px = document.createElement('i');
       px.className = 'pixel';
@@ -301,7 +301,7 @@ async function finish(button: HTMLElement) {
     const hero = stepEl.querySelector<HTMLImageElement>('.speaker');
     if (hero) {
       hero.src = poseUrl('getaway');
-      await done(hero.animate([{ transform: 'none' }, { transform: 'translateX(-6px)', offset: 0.25 }, { transform: 'translateX(70vw)', opacity: 0 }], { duration: 760, easing: EASE_IN, fill: 'forwards' }));
+      await done(hero.animate([{ transform: 'none' }, { transform: 'translateX(-6px)', offset: 0.25 }, { transform: 'translateX(70vw)', opacity: 0 }], { duration: 700, easing: EASE_IN_OUT, fill: 'forwards' }));
     }
   }
   try {
