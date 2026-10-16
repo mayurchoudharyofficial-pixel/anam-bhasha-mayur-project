@@ -1,6 +1,7 @@
 import type { Goal, Level, Profile } from '@pixelpeeper/schema';
 import { loadSettings, saveSettings, type Provider, type Settings } from '../../components/settings';
 import { WELCOME_STEPS, poseUrl, headerView, stepView, type WelcomeState } from '../../components/welcome-view';
+import { mountPixelLandscape } from '../../components/pixel-landscape';
 import './welcome.css';
 
 /** First-run setup. Every step is optional; answers are saved as you go. */
@@ -393,5 +394,6 @@ void (async () => {
   const commands = await chrome.commands.getAll();
   state.shortcut = commands.find((c) => c.name === 'pick')?.shortcut || null;
   renderShell();
+  mountPixelLandscape();
   void show(0);
 })();
